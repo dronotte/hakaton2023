@@ -106,6 +106,7 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: unnecessary
           name: id_rsa # optional
           if_key_exists: replace # replace / ignore / fail; optional (defaults to fail)
       - name: Set up SSH key
