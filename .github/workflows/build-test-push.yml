@@ -10,6 +10,8 @@ on:
 env:
   DOCKERHUB_USERNAME: your_dockerhub_username
   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+  JAVA_HOME: /usr/local/openjdk-17
+  PATH: ${{ env.JAVA_HOME }}/bin:${{ env.PATH }}
 
 jobs:
   build:
