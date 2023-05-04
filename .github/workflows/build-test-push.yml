@@ -10,8 +10,6 @@ on:
 env:
   DOCKERHUB_USERNAME: your_dockerhub_username
   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-  JAVA_HOME: /usr/local/openjdk-17
-  PATH: ${{ env.JAVA_HOME }}/bin:${{ env.PATH }}
 
 jobs:
   build:
@@ -24,6 +22,11 @@ jobs:
 
       - name: Change permissions for gradlew
         run: chmod +x backend/gradlew
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
 
       - name: Build and test backend
         run: |
