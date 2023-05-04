@@ -128,9 +128,9 @@ jobs:
         run: envsubst < docker-compose.yml.tpl > docker-compose.yml
       - name: Copy files to remote server
         run: |
-          scp -o StrictHostKeyChecking=no -r docker-compose.yml .env ubuntu@$(terraform output -raw instance_external_ip):~
+          scp -o StrictHostKeyChecking=no -r docker-compose.yml .env ubuntu@$(terraform output -raw external_ip):~
       - name: Start services
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@$(terraform output -raw instance_external_ip) << EOF
+          ssh -o StrictHostKeyChecking=no ubuntu@$(terraform output -raw external_ip) << EOF
             docker-compose up -d
           EOF

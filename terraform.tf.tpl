@@ -69,3 +69,7 @@ resource "yandex_compute_instance" "neuroworldhello" {
     ]
   }
 }
+
+output "external_ip" {
+  value = yandex_vpc_address.neuroworldhello-address.external_ipv4_address[0].address
+}
