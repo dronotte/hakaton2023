@@ -6,7 +6,7 @@ on:
     branches:
       - master
 
-needs: build-test-push
+
 
 env:
   IMAGE_TAG: ${{ github.sha }}
@@ -14,6 +14,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    needs: build-test-push
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
