@@ -98,8 +98,10 @@ jobs:
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
           export PATH="$PATH:/home/runner/.yandex-cloud/bin"
-#      - name: Get service account key
-#        run: echo "${{ secrets.KEY_JSON }}" > key.json
+      - name: Get service account key
+        env:
+          KEY_JSON: ${{ secrets.KEY_JSON }}
+        run: echo -n "${KEY_JSON}" | jq > key.json
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
@@ -117,7 +119,7 @@ jobs:
             -var cloud_id=${{ secrets.CLOUD_ID }} \
             -var cloud_folder_id=${{ secrets.CLOUD_FOLDER_ID }} \
             -var cloud_zone=${{ secrets.CLOUD_ZONE }}
-            -var sa_key=${{ secrets.KEY_JSON }}
+#            -var sa_key=${{ secrets.KEY_JSON }}
       - name: Export Terraform output
         run: terraform output -json > terraform.output.json
       - name: Set environment variables
