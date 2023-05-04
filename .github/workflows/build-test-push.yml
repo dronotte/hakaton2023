@@ -121,7 +121,10 @@ jobs:
         run: cat terraform.tf
       - name: Terraform plan
         run: |
-          terraform plan
+          terraform plan \
+          -var cloud_id=${{ secrets.CLOUD_ID }} \
+          -var cloud_folder_id=${{ secrets.CLOUD_FOLDER_ID }} \
+          -var cloud_zone=${{ secrets.CLOUD_ZONE }}
       - name: Terraform apply
         run: |
           terraform apply \
