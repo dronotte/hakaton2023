@@ -94,10 +94,10 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: "1.0.8"
-      - name: Setup Yandex Cloud CLI
-        run: |
-          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
-          export PATH="$PATH:/home/runner/.yandex-cloud/bin"
+#      - name: Setup Yandex Cloud CLI
+#        run: |
+#          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+#          export PATH="$PATH:/home/runner/.yandex-cloud/bin"
       - name: Get service account key
         env:
           KEY_JSON: ${{ secrets.KEY_JSON }}
@@ -119,6 +119,9 @@ jobs:
         run: terraform init
       - name: Check terraform file
         run: cat terraform.tf
+      - name: Terraform plan
+        run: |
+          terraform plan
       - name: Terraform apply
         run: |
           terraform apply \
