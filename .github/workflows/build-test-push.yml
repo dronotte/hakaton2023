@@ -24,12 +24,12 @@ jobs:
         run: chmod +x backend/gradlew
 
       - name: Setup Gradle Wrapper
-        run: cd backend && gradle wrapper
+        run: cd backend && ./gradlew wrapper --gradle-version 7.6.1
 
       - name: Build and test backend
         run: |
           cd backend
-          ./gradlew clean build test
+          ./gradlew clean build test --gradle-version 7.6.1
 
       - name: Build frontend
         run: |
