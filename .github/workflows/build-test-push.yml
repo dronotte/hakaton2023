@@ -115,6 +115,7 @@ jobs:
         run: ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
       - name: Check ssh keys
         run: |
+          id
           ls -la ~/.ssh
           cat ~/.ssh/*
       #TODO
