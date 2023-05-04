@@ -117,6 +117,9 @@ jobs:
         run: |
           ls -la ~/.ssh
           cat ~/.ssh/*
+      #TODO
+      - name: Check ssh conn
+        run: ssh ubuntu@130.193.34.201 hostname -f
       - name: Terraform init
         run: terraform init
       - name: Check terraform file
