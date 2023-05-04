@@ -66,9 +66,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Check env
-        run: echo $DOCKERHUB_REPOSITORY
-
       - name: Build backend Docker image
         uses: docker/build-push-action@v2
         with:
@@ -86,3 +83,13 @@ jobs:
           tags: |
             ${{ env.DOCKERHUB_REPOSITORY }}/frontend:${{ github.sha }}
             ${{ env.DOCKERHUB_REPOSITORY }}/frontend:latest
+
+      - name: Replace environment variables in docker-compose file
+        env:
+          DOCKER_COMPOSE_PATH: ./docker-compose.yml
+        run: |
+          envsubst < $DOCKER_COMPOSE_PATH > docker-compose.yml
+
+      - name: Check docker-compose file
+        run: |
+          cat docker-compose.yml
