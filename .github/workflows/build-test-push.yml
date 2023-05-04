@@ -1,0 +1,50 @@
+name: CI
+
+# Запускаем только для ветки master
+on:
+  push:
+    branches:
+      - master
+
+# Определяем переменные окружения
+env:
+  DOCKERHUB_USERNAME: your_dockerhub_username
+  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # Собираем backend и frontend компоненты, протестируем их и создаем docker-образы
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and test backend
+        run: |
+          cd backend
+          ./gradlew clean build test
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
+      - name: Build backend Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: backend
+          push: true
+          tags: ${{ env.DOCKERHUB_USERNAME }}/mybackend:latest
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ env.DOCKERHUB_PASSWORD }}
+
+      - name: Build frontend Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: frontend
+          push: true
+          tags: ${{ env.DOCKERHUB_USERNAME }}/myfrontend:latest
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ env.DOCKERHUB_PASSWORD }}
