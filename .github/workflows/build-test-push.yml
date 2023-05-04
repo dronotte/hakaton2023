@@ -108,6 +108,8 @@ jobs:
           ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
       - name: Terraform init
         run: terraform init
+      - name: Check terraform file
+        run: cat terraform.tf
       - name: Terraform apply
         run: |
           terraform apply \
