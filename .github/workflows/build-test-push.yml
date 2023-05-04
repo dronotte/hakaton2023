@@ -22,7 +22,7 @@ jobs:
           POSTGRES_PASSWORD: postgrespass
           POSTGRES_DB: best
         ports:
-          - 5432/tcp
+          - 5432:5432/tcp
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -31,7 +31,7 @@ jobs:
       nginx:
         image: nginx
         ports:
-          - 80/tcp
+          - 80:80/tcp
     # Собираем backend и frontend компоненты, протестируем их и создаем docker-образы
     steps:
       - name: Checkout code
