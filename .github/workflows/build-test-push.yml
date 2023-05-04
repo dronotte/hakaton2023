@@ -14,7 +14,20 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    services:
+      postgres:
+        image: postgres:12-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgrespass
+          POSTGRES_DB: best
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     # Собираем backend и frontend компоненты, протестируем их и создаем docker-образы
     steps:
       - name: Checkout code
@@ -33,6 +46,13 @@ jobs:
         run: |
           cd backend
           ./gradlew clean build test
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/best
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgrespass
+          SPRING_JPA_HIBERNATE_DDL_AUTO: update
+          SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: true
+          SPRING_JPA_SHOW_SQL: true
 
       - name: Build frontend
         run: |
