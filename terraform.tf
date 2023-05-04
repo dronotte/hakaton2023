@@ -5,6 +5,14 @@ terraform {
       version = "~> 0.56"
     }
   }
+  backend "s3" {
+    endpoint                    = "storage.yandexcloud.net"
+    bucket                      = "neuroworldhello-terraform"
+    region                      = "ru-central1"
+    key                         = "ycdev/terraform.tfstate"
+    skip_region_validation      = true
+    skip_credentials_validation = true
+  }
 }
 
 provider "yandex" {
