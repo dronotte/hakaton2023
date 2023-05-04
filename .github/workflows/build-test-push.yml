@@ -94,15 +94,6 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: "1.0.8"
-      - name: Replace variables in terraform file
-        run: |
-          export CLOUD_ID=${{ secrets.CLOUD_ID }}
-          export CLOUD_FOLDER_ID=${{ secrets.CLOUD_FOLDER_ID }}
-          export CLOUD_ZONE=${{ secrets.CLOUD_ZONE }}
-          envsubst < terraform.tf.tpl > terraform.tf
-      - name: Checko terraform.tf file
-        run: |
-          cat terraform.tf
       - name: Setup Yandex Cloud CLI
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
@@ -118,7 +109,12 @@ jobs:
       - name: Terraform init
         run: terraform init
       - name: Terraform apply
-        run: terraform apply -auto-approve
+        run: |
+          terraform apply \
+            -auto-approve \
+            -var cloud_id=${{ secrets.CLOUD_ID }} \
+            -var cloud_folder_id=${{ secrets.CLOUD_FOLDER_ID }} \
+            -var cloud_zone=${{ secrets.CLOUD_ZONE }}
       - name: Export Terraform output
         run: terraform output -json > terraform.output.json
       - name: Set environment variables
