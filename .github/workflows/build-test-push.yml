@@ -20,21 +20,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-            ${{ runner.os }}-
-            ''
-
       - name: Change permissions for gradlew
         run: chmod +x backend/gradlew
-
-      - name: Setup Gradle Wrapper
-        run: cd backend && ./gradlew wrapper --gradle-version 7.6.1
 
       - name: Build and test backend
         run: |
