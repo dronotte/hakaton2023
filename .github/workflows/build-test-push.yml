@@ -96,9 +96,9 @@ jobs:
           terraform_version: "1.0.8"
       - name: Replace variables in terraform file
         run: |
-          export CLOUD_ID=your_cloud_id
-          export CLOUD_FOLDER_ID=your_folder_id
-          export CLOUD_ZONE=your_zone
+          export CLOUD_ID=${{ secrets.CLOUD_ID }}
+          export CLOUD_FOLDER_ID=${{ secrets.CLOUD_FOLDER_ID }}
+          export CLOUD_ZONE=${{ secrets.CLOUD_ZONE }}
           envsubst < terraform.tf.tpl > terraform.tf
       - name: Checko terraform.tf file
         run: |
