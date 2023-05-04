@@ -65,6 +65,7 @@ resource "yandex_compute_instance" "neuroworldhello" {
     user        = "ubuntu"
     private_key = file("~/.ssh/id_rsa")
     host        = self.network_interface[0].nat_ip_address
+    timeout     = "2m"
   }
   provisioner "remote-exec" {
     inline = [
