@@ -126,6 +126,8 @@ jobs:
         run: envsubst < .env.tpl > .env
       - name: Create docker-compose file
         run: envsubst < docker-compose.yml.tpl > docker-compose.yml
+      - name: Check hostname
+        run: echo $(terraform output -raw external_ip)
       - name: Copy files to remote server
         run: |
           scp -o StrictHostKeyChecking=no -r docker-compose.yml .env ubuntu@$(terraform output -raw external_ip):~
