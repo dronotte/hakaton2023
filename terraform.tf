@@ -73,3 +73,15 @@ resource "yandex_compute_instance" "neuroworldhello" {
 output "external_ip" {
   value = yandex_vpc_address.neuroworldhello-address.external_ipv4_address[0].address
 }
+
+variable "cloud_id" {
+  type = string
+}
+
+variable "cloud_folder_id" {
+  type = string
+}
+
+variable "cloud_zone" {
+  type = string
+}
