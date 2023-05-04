@@ -84,13 +84,3 @@ jobs:
           tags: |
             ${{ env.DOCKERHUB_REPOSITORY }}/frontend:${{ env.IMAGE_TAG }}
             ${{ env.DOCKERHUB_REPOSITORY }}/frontend:latest
-
-      - name: Replace environment variables in docker-compose file
-        env:
-          DOCKER_COMPOSE_PATH: ./docker-compose.yml.template
-        run: |
-          envsubst < $DOCKER_COMPOSE_PATH > docker-compose.yml
-
-      - name: Check docker-compose file
-        run: |
-          cat docker-compose.yml
