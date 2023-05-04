@@ -28,6 +28,10 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      nginx:
+        image: nginx
+        ports:
+          - 80/tcp
     # Собираем backend и frontend компоненты, протестируем их и создаем docker-образы
     steps:
       - name: Checkout code
@@ -41,6 +45,12 @@ jobs:
         with:
           java-version: 17
           distribution: 'adopt'
+
+      - name: Check nginx
+        run: curl localhost:80
+
+      - name: Wait for PostgreSQL
+        run: sleep 10s
 
       - name: Build and test backend
         run: |
