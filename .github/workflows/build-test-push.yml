@@ -67,7 +67,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Check env
-        Run: echo $DOCKERHUB_REPOSITORY
+        run: echo $DOCKERHUB_REPOSITORY
 
       - name: Build backend Docker image
         uses: docker/build-push-action@v2
