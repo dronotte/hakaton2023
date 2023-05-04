@@ -8,8 +8,8 @@ on:
 
 # Определяем переменные окружения
 env:
-  DOCKERHUB_USERNAME: your_dockerhub_username
   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+  DOCKERHUB_REPOSITORY: dronotte
 
 jobs:
   build:
