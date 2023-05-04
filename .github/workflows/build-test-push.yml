@@ -84,3 +84,52 @@ jobs:
           tags: |
             ${{ env.DOCKERHUB_REPOSITORY }}/frontend:${{ env.IMAGE_TAG }}
             ${{ env.DOCKERHUB_REPOSITORY }}/frontend:latest
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: "1.0.8"
+      - name: Replace variables in terraform file
+        run: |
+          export CLOUD_ID=your_cloud_id
+          export CLOUD_FOLDER_ID=your_folder_id
+          export CLOUD_ZONE=your_zone
+          envsubst < terraform.tf.tpl > terraform.tf
+      - name: Setup Yandex Cloud CLI
+        run: |
+          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+          export PATH="$PATH:/home/runner/.yandex-cloud/bin"
+      - name: Get service account key
+        run: echo ${{ secrets.KEY_JSON }} > key.json
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
+      - name: Terraform init
+        run: terraform init
+      - name: Terraform apply
+        run: terraform apply -auto-approve
+      - name: Export Terraform output
+        run: terraform output -json > terraform.output.json
+      - name: Set environment variables
+        run: |
+          export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          export POSTGRES_DB=${{ secrets.POSTGRES_USER }}
+      - name: Create .env file
+        run: envsubst < .env.tpl > .env
+      - name: Copy files to remote server
+        run: |
+          scp -o StrictHostKeyChecking=no -r docker-compose.yml .env ubuntu@$(terraform output -raw instance_external_ip):~
+      - name: Start services
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@$(terraform output -raw instance_external_ip) << EOF
+            docker-compose up -d
+          EOF
