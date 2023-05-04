@@ -26,7 +26,7 @@ jobs:
       - name: Build and test backend
         run: |
           cd backend
-          ./gradlew clean build test --gradle-version 7.6.1
+          ./gradlew clean build test
 
       - name: Build frontend
         run: |
