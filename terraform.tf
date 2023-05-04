@@ -9,9 +9,9 @@ terraform {
 
 provider "yandex" {
   service_account_key_file = "key.json"
-  cloud_id                 = "${CLOUD_ID}"
-  folder_id                = "${CLOUD_FOLDER_ID}"
-  zone                     = "${CLOUD_ZONE}"
+  cloud_id                 = var.cloud_id
+  folder_id                = var.cloud_folder_id
+  zone                     = var.cloud_zone
 }
 
 resource "yandex_vpc_network" "neuroworldhello_network" {
@@ -20,7 +20,7 @@ resource "yandex_vpc_network" "neuroworldhello_network" {
 
 resource "yandex_vpc_subnet" "neuroworldhello_subnet" {
   name           = "neuroworldhello-subnet"
-  zone           = "${CLOUD_ZONE}"
+  zone           = var.cloud_zone
   network_id     = yandex_vpc_network.neuroworldhello_network.id
   v4_cidr_blocks = ["10.0.1.0/24"]
 }
@@ -28,13 +28,13 @@ resource "yandex_vpc_subnet" "neuroworldhello_subnet" {
 resource "yandex_vpc_address" "neuroworldhello-address" {
   name = "neuroworldhello-address"
   external_ipv4_address {
-    zone_id = "${CLOUD_ZONE}"
+    zone_id = var.cloud_zone
   }
 }
 
 resource "yandex_compute_instance" "neuroworldhello" {
   name = "neuroworldhello"
-  zone = "${CLOUD_ZONE}"
+  zone = var.cloud_zone
   resources {
     cores = 2
     memory = 4
