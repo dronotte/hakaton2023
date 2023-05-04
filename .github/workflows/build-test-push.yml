@@ -10,6 +10,7 @@ on:
 env:
   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
   DOCKERHUB_REPOSITORY: dronotte
+  IMAGE_TAG: ${{ github.sha }}
 
 jobs:
   build:
@@ -72,7 +73,7 @@ jobs:
           context: backend
           push: true
           tags: |
-            ${{ env.DOCKERHUB_REPOSITORY }}/backend:${{ github.sha }}
+            ${{ env.DOCKERHUB_REPOSITORY }}/backend:${{ env.IMAGE_TAG }}
             ${{ env.DOCKERHUB_REPOSITORY }}/backend:latest
 
       - name: Build frontend Docker image
@@ -81,12 +82,12 @@ jobs:
           context: frontend
           push: true
           tags: |
-            ${{ env.DOCKERHUB_REPOSITORY }}/frontend:${{ github.sha }}
+            ${{ env.DOCKERHUB_REPOSITORY }}/frontend:${{ env.IMAGE_TAG }}
             ${{ env.DOCKERHUB_REPOSITORY }}/frontend:latest
 
       - name: Replace environment variables in docker-compose file
         env:
-          DOCKER_COMPOSE_PATH: ./docker-compose.yml
+          DOCKER_COMPOSE_PATH: ./docker-compose.yml.template
         run: |
           envsubst < $DOCKER_COMPOSE_PATH > docker-compose.yml
 
