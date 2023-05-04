@@ -13,80 +13,80 @@ env:
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:12-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgrespass
-          POSTGRES_DB: best
-        ports:
-          - 5432:5432/tcp
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    # Собираем backend и frontend компоненты, протестируем их и создаем docker-образы
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Change permissions for gradlew
-        run: chmod +x backend/gradlew
-
-      - name: Set up Java 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: 17
-          distribution: 'adopt'
-
-      - name: Build and test backend
-        run: |
-          cd backend
-          ./gradlew clean build test
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/best
-          SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: postgrespass
-          SPRING_JPA_HIBERNATE_DDL_AUTO: update
-          SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: true
-          SPRING_JPA_SHOW_SQL: true
-
-      - name: Build frontend
-        run: |
-          cd frontend
-          npm install
-          npm run build
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Build backend Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: backend
-          push: true
-          tags: |
-            ${{ env.DOCKERHUB_REPOSITORY }}/backend:${{ env.IMAGE_TAG }}
-            ${{ env.DOCKERHUB_REPOSITORY }}/backend:latest
-
-      - name: Build frontend Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: frontend
-          push: true
-          tags: |
-            ${{ env.DOCKERHUB_REPOSITORY }}/frontend:${{ env.IMAGE_TAG }}
-            ${{ env.DOCKERHUB_REPOSITORY }}/frontend:latest
+#  build:
+#    runs-on: ubuntu-latest
+#    services:
+#      postgres:
+#        image: postgres:12-alpine
+#        env:
+#          POSTGRES_USER: postgres
+#          POSTGRES_PASSWORD: postgrespass
+#          POSTGRES_DB: best
+#        ports:
+#          - 5432:5432/tcp
+#        options: >-
+#          --health-cmd pg_isready
+#          --health-interval 10s
+#          --health-timeout 5s
+#          --health-retries 5
+#    # Собираем backend и frontend компоненты, протестируем их и создаем docker-образы
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name: Change permissions for gradlew
+#        run: chmod +x backend/gradlew
+#
+#      - name: Set up Java 17
+#        uses: actions/setup-java@v2
+#        with:
+#          java-version: 17
+#          distribution: 'adopt'
+#
+#      - name: Build and test backend
+#        run: |
+#          cd backend
+#          ./gradlew clean build test
+#        env:
+#          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/best
+#          SPRING_DATASOURCE_USERNAME: postgres
+#          SPRING_DATASOURCE_PASSWORD: postgrespass
+#          SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#          SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: true
+#          SPRING_JPA_SHOW_SQL: true
+#
+#      - name: Build frontend
+#        run: |
+#          cd frontend
+#          npm install
+#          npm run build
+#
+#      - name: Login to Docker Hub
+#        uses: docker/login-action@v1
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+#
+#      - name: Build backend Docker image
+#        uses: docker/build-push-action@v2
+#        with:
+#          context: backend
+#          push: true
+#          tags: |
+#            ${{ env.DOCKERHUB_REPOSITORY }}/backend:${{ env.IMAGE_TAG }}
+#            ${{ env.DOCKERHUB_REPOSITORY }}/backend:latest
+#
+#      - name: Build frontend Docker image
+#        uses: docker/build-push-action@v2
+#        with:
+#          context: frontend
+#          push: true
+#          tags: |
+#            ${{ env.DOCKERHUB_REPOSITORY }}/frontend:${{ env.IMAGE_TAG }}
+#            ${{ env.DOCKERHUB_REPOSITORY }}/frontend:latest
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+#    needs: build
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
