@@ -161,5 +161,5 @@ jobs:
       - name: Start services
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${VM_HOST_IP} << EOF
-            docker-compose up -d
+            sudo docker-compose up -d
           EOF
