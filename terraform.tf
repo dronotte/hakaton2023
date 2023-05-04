@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "yandex" {
-  service_account_key_file = "key.json"
+  service_account_key_file = var.sa_key
   cloud_id                 = var.cloud_id
   folder_id                = var.cloud_folder_id
   zone                     = var.cloud_zone
@@ -83,5 +83,9 @@ variable "cloud_folder_id" {
 }
 
 variable "cloud_zone" {
+  type = string
+}
+
+variable "sa_key" {
   type = string
 }
